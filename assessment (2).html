@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Wellbeing & Productivity Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(52, 152, 219, 0.1);
+            box-shadow: inset 0 0 20px rgba(52, 152, 219, 0.3), 0 0 20px rgba(52, 152, 219, 0.2);
+            animation: float 8s infinite ease-in-out;
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-35px) translateX(-15px);
+            }
+            75% {
+                transform: translateY(-15px) translateX(-5px);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            transform: rotate(30deg);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .header-image {
+            flex: 1;
+            max-width: 300px;
+            padding: 20px;
+        }
+        
+        .header-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-text {
+            flex: 2;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            margin: 20px 0;
+            color: #3498db;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            margin: 15px 0;
+            color: #2ecc71;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #ff6b6b;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .user-selection {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .user-card {
+            background: rgba(30, 30, 40, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .user-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+            background: rgba(40, 40, 50, 0.9);
+        }
+        
+        .user-card i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+        }
+        
+        .user-card h3 {
+            margin-bottom: 15px;
+        }
+        
+        .info-form {
+            background: rgba(30, 30, 40, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            display: none;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #3498db;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #3498db;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(20, 20, 30, 0.8);
+            color: white;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-group label {
+            color: #2ecc71;
+        }
+        
+        .age-category {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .age-option {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .age-option:hover {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        .age-option.selected {
+            background: rgba(52, 152, 219, 0.5);
+            color: white;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+        
+        .assessment-section {
+            background: rgba(30, 30, 40, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            display: none;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .question p {
+            font-weight: 500;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #2ecc71;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .option {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-grow: 1;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .option:hover {
+            background: rgba(52, 152, 219, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .option.selected {
+            background: rgba(52, 152, 219, 0.5);
+            color: white;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+        
+        .game-container {
+            background: rgba(20, 20, 30, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .game-btn {
+            background: linear-gradient(to right, #ff9f43, #ff7f17);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .primary-btn {
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #2ecc71, #3498db);
+        }
+        
+        .prev-btn {
+            background: rgba(149, 165, 166, 0.8);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .prev-btn:hover {
+            background: rgba(127, 140, 141, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .results-section {
+            display: none;
+            background: rgba(30, 30, 40, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .creative-section {
+            background: rgba(20, 30, 40, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .creative-section h3 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+        
+        .creative-activity {
+            background: rgba(30, 30, 40, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .creative-activity:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .creative-activity i {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #3498db;
+            text-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+        }
+        
+        .certificate {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 15px solid #ffd700;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><circle cx="50" cy="50" r="40" fill="none" stroke="%23FFD700" stroke-width="2"/><polygon points="50,10 61,40 95,40 67,60 79,90 50,70 21,90 33,60 5,40 39,40" fill="%23FFD700"/></svg>');
+            background-repeat: repeat;
+            z-index: 0;
+        }
+        
+        .certificate h2 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            position: relative;
+        }
+        
+        .certificate h3 {
+            font-size: 1.8rem;
+            color: #3498db;
+            margin: 20px 0;
+            text-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+            position: relative;
+        }
+        
+        .certificate p {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .certificate .stars {
+            font-size: 3rem;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            position: relative;
+        }
+        
+        .achievement-badge {
+            font-size: 5rem;
+            margin: 20px 0;
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .ai-models {
+            background: rgba(40, 40, 50, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .ai-models h3 {
+            color: #9b59b6;
+            margin-bottom: 15px;
+            text-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
+        }
+        
+        .parent-info {
+            background: rgba(40, 30, 30, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        /* Dashboard styles */
+        .dashboard {
+            background: rgba(20, 30, 40, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .dashboard-item {
+            background: rgba(30, 30, 40, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            position: relative;
+        }
+        
+        .percentage-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0,0,0,0.7);
+        }
+        
+        .mental-health-info {
+            background: rgba(40, 30, 40, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .info-card {
+            background: rgba(30, 30, 40, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .info-card h4 {
+            color: #9b59b6;
+            margin-bottom: 15px;
+        }
+        
+        .info-card ul {
+            text-align: left;
+            margin-left: 20px;
+        }
+        
+        .info-card li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .header-image {
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .user-selection {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .prev-btn {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .age-category {
+                flex-direction: column;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation for child results */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-result {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .chatbot-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .chatbot-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .chatbot-iframe {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 450px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            background: white;
+        }
+        
+        @media (max-width: 768px) {
+            .chatbot-iframe {
+                width: 300px;
+                height: 400px;
+                right: -10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-image">
+                    <img src="https://i.postimg.cc/ZKfqr7ys/Gemini-Generated-Image-rz8xaorz8xaorz8x.png" alt="Digital Wellbeing">
+                </div>
+                <div class="header-text">
+                    <h1>Digital Wellbeing & Productivity Assessment</h1>
+                    <p>For Moms & Kids - Building Healthier Digital Habits</p>
+                    <div class="quote">
+                        "Today's Generation is a blessing for a bright future with Prosperity and Eternity."
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="user-selection">
+            <div class="user-card" id="child-user">
+                <i class="fas fa-child"></i>
+                <h3>I'm a Child</h3>
+                <p>Fun assessment with games and activities</p>
+            </div>
+            
+            <div class="user-card" id="parent-user">
+                <i class="fas fa-users"></i>
+                <h3>I'm a Parent</h3>
+                <p>Comprehensive assessment for you and your child</p>
+            </div>
+        </div>
+        
+        <div class="info-form" id="child-info">
+            <h2>Tell Us About Yourself!</h2>
+            <div class="form-group">
+                <label for="child-name">What's your name?</label>
+                <input type="text" id="child-name" placeholder="Enter your name">
+            </div>
+            
+            <h3>How old are you?</h3>
+            <div class="age-category">
+                <div class="age-option" data-age="5-7">5-7 years</div>
+                <div class="age-option" data-age="8-10">8-10 years</div>
+                <div class="age-option" data-age="11-13">11-13 years</div>
+                <div class="age-option" data-age="14-17">14-17 years</div>
+            </div>
+            
+            <button class="primary-btn" onclick="startChildAssessment()">Let's Begin!</button>
+            
+            <div class="ai-models">
+                <h3>Powered by AI Technology</h3>
+                <p>Our assessment uses advanced LLM, ML and NLP models to personalize questions based on age and needs</p>
+            </div>
+        </div>
+        
+        <div class="info-form" id="parent-info">
+            <h2>Parent Assessment</h2>
+            <div class="form-group">
+                <label for="parent-name">Your Name</label>
+                <input type="text" id="parent-name" placeholder="Enter your name">
+            </div>
+            
+            <div class="form-group">
+                <label for="child-name-parent">Your Child's Name</label>
+                <input type="text" id="child-name-parent" placeholder="Enter your child's name">
+            </div>
+            
+            <div class="form-group">
+                <label for="child-age-parent">Your Child's Age</label>
+                <select id="child-age-parent">
+                    <option value="">Select Age Range</option>
+                    <option value="5-7">5-7 years</option>
+                    <option value="8-10">8-10 years</option>
+                    <option value="11-13">11-13 years</option>
+                    <option value="14-17">14-17 years</option>
+                </select>
+            </div>
+            
+            <div class="parent-info">
+                <h3>Additional Information (Optional)</h3>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="adhd-checkbox">
+                    <label for="adhd-checkbox">My child has ADHD</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="dyslexia-checkbox">
+                    <label for="dyslexia-checkbox">My child has dyslexia</label>
+                </div>
+            </div>
+            
+            <button class="primary-btn" onclick="startParentAssessment()">Begin Assessment</button>
+        </div>
+        
+        <section class="assessment-section" id="child-assessment">
+            <h2>Digital Wellbeing Adventure for <span id="child-name-display"></span></h2>
+            <p>Let's play some games and learn about healthy digital habits!</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="child-progress"></div>
+            </div>
+            
+            <div class="question" id="child-q1">
+                <p>1. How much time do you spend on screens each day?</p>
+                <div class="options">
+                    <div class="option">Less than 1 hour</div>
+                    <div class="option">1-2 hours</div>
+                    <div class="option">2-3 hours</div>
+                    <div class="option">More than 3 hours</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q2" style="display: none;">
+                <p>2. What do you usually do on screens?</p>
+                <div class="options">
+                    <div class="option">Watch videos</div>
+                    <div class="option">Play games</div>
+                    <div class="option">Learn new things</div>
+                    <div class="option">Talk to friends</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q3" style="display: none;">
+                <p>3. How do you feel after using screens for a long time?</p>
+                <div class="options">
+                    <div class="option">Happy and energized</div>
+                    <div class="option">Tired</div>
+                    <div class="option">Bored</div>
+                    <div class="option">My eyes hurt</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q4" style="display: none;">
+                <p>4. What other activities do you enjoy besides screens?</p>
+                <div class="options">
+                    <div class="option">Playing outside</div>
+                    <div class="option">Reading books</div>
+                    <div class="option">Drawing or painting</div>
+                    <div class="option">Playing with toys</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q5" style="display: none;">
+                <p>5. How often do you take breaks from screens?</p>
+                <div class="options">
+                    <div class="option">Every 30 minutes</div>
+                    <div class="option">Every hour</div>
+                    <div class="option">Every 2 hours</div>
+                    <div class="option">Rarely</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q6" style="display: none;">
+                <p>6. Let's play a game!</p>
+                <div class="game-container">
+                    <div id="game-content">
+                        <p>Select your age group to play an appropriate game!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q7" style="display: none;">
+                <p>7. Do you use screens before going to bed?</p>
+                <div class="options">
+                    <div class="option">Never</div>
+                    <div class="option">Sometimes</div>
+                    <div class="option">Often</div>
+                    <div class="option">Always</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q8" style="display: none;">
+                <p>8. What's your favorite thing to do outdoors?</p>
+                <div class="options">
+                    <div class="option">Play sports</div>
+                    <div class="option">Ride bike</div>
+                    <div class="option">Explore nature</div>
+                    <div class="option">Play with friends</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q9" style="display: none;">
+                <p>9. How do you feel when you can't use screens?</p>
+                <div class="options">
+                    <div class="option">Fine, I find other things to do</div>
+                    <div class="option">A little bored</div>
+                    <div class="option">Very bored</div>
+                    <div class="option">Upset or angry</div>
+                </div>
+            </div>
+            
+            <div class="question" id="child-q10" style="display: none;">
+                <p>10. Let's play another game!</p>
+                <div class="game-container">
+                    <div id="game-content-2">
+                        <p>Select your age group to play an appropriate game!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="prev-btn" onclick="prevChildQuestion()" style="display: none;">Previous</button>
+                <button class="primary-btn" id="next-child-btn" onclick="nextChildQuestion()">Next</button>
+            </div>
+        </section>
+        
+        <section class="assessment-section" id="parent-assessment">
+            <h2>Parent Digital Wellbeing Assessment</h2>
+            <p>Answer these questions about your family's digital habits</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="parent-progress"></div>
+            </div>
+            
+            <div class="question" id="parent-q1">
+                <p>1. How many hours per day do you spend on digital devices?</p>
+                <div class="options">
+                    <div class="option">Less than 2 hours</div>
+                    <div class="option">2-4 hours</div>
+                    <div class="option">4-6 hours</div>
+                    <div class="option">More than 6 hours</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q2" style="display: none;">
+                <p>2. How much screen time does your child have on weekdays?</p>
+                <div class="options">
+                    <div class="option">Less than 1 hour</div>
+                    <div class="option">1-2 hours</div>
+                    <div class="option">2-3 hours</div>
+                    <div class="option">More than 3 hours</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q3" style="display: none;">
+                <p>3. How would you describe the quality of your child's screen time?</p>
+                <div class="options">
+                    <div class="option">Mostly educational</div>
+                    <div class="option">Mixed educational and entertainment</div>
+                    <div class="option">Mostly entertainment</div>
+                    <div class="option">Mostly social media</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q4" style="display: none;">
+                <p>4. How often do you use screens during family meals?</p>
+                <div class="options">
+                    <div class="option">Never</div>
+                    <div class="option">Rarely</div>
+                    <div class="option">Sometimes</div>
+                    <div class="option">Often</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q5" style="display: none;">
+                <p>5. Does your child use digital devices before bedtime?</p>
+                <div class="options">
+                    <div class="option">Never</div>
+                    <div class="option">Rarely</div>
+                    <div class="option">Sometimes</div>
+                    <div class="option">Most nights</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q6" style="display: none;">
+                <p>6. Have you noticed changes in your child's mood related to screen time?</p>
+                <div class="options">
+                    <div class="option">No noticeable changes</div>
+                    <div class="option">Sometimes irritable after screen time</div>
+                    <div class="option">Frequently moody or anxious</div>
+                    <div class="option">Withdrawal symptoms when not using devices</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q7" style="display: none;">
+                <p>7. How does screen time affect your child's sleep patterns?</p>
+                <div class="options">
+                    <div class="option">No noticeable effect</div>
+                    <div class="option">Difficulty falling asleep occasionally</div>
+                    <div class="option">Regular sleep disturbances</div>
+                    <div class="option">Significant insomnia issues</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q8" style="display: none;">
+                <p>8. How does your own screen usage affect family interactions?</p>
+                <div class="options">
+                    <div class="option">No negative impact</div>
+                    <div class="option">Sometimes distracts from family time</div>
+                    <div class="option">Frequently interrupts conversations</div>
+                    <div class="option">Significantly reduces quality family time</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q9" style="display: none;">
+                <p>9. Have you experienced increased stress or anxiety related to your digital device usage?</p>
+                <div class="options">
+                    <div class="option">Never</div>
+                    <div class="option">Occasionally</div>
+                    <div class="option">Frequently</div>
+                    <div class="option">Constantly</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q10" style="display: none;">
+                <p>10. How does your child react when asked to stop using screens?</p>
+                <div class="options">
+                    <div class="option">Usually complies without issue</div>
+                    <div class="option">Sometimes resists but eventually complies</div>
+                    <div class="option">Frequently has tantrums or arguments</div>
+                    <div class="option">Extreme resistance every time</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q11" style="display: none;">
+                <p>11. Do you feel your child's screen time affects their physical activity levels?</p>
+                <div class="options">
+                    <div class="option">No noticeable effect</div>
+                    <div class="option">Slightly reduces activity</div>
+                    <div class="option">Significantly reduces activity</div>
+                    <div class="option">My child is mostly sedentary due to screens</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q12" style="display: none;">
+                <p>12. How often do you discuss online safety with your child?</p>
+                <div class="options">
+                    <div class="option">Regularly</div>
+                    <div class="option">Occasionally</div>
+                    <div class="option">Rarely</div>
+                    <div class="option">Never</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q13" style="display: none;">
+                <p>13. Do you use parental controls on your child's devices?</p>
+                <div class="options">
+                    <div class="option">Yes, comprehensive controls</div>
+                    <div class="option">Some basic controls</div>
+                    <div class="option">No, but I monitor usage</div>
+                    <div class="option">No controls or monitoring</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q14" style="display: none;">
+                <p>14. How has your own screen time changed in the past year?</p>
+                <div class="options">
+                    <div class="option">Decreased significantly</div>
+                    <div class="option">Stayed about the same</div>
+                    <div class="option">Increased somewhat</div>
+                    <div class="option">Increased significantly</div>
+                </div>
+            </div>
+            
+            <div class="question" id="parent-q15" style="display: none;">
+                <p>15. How concerned are you about your family's digital wellbeing?</p>
+                <div class="options">
+                    <div class="option">Not concerned at all</div>
+                    <div class="option">Slightly concerned</div>
+                    <div class="option">Moderately concerned</div>
+                    <div class="option">Very concerned</div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="prev-btn" onclick="prevParentQuestion()" style="display: none;">Previous</button>
+                <button class="primary-btn" id="next-parent-btn" onclick="nextParentQuestion()">Next</button>
+            </div>
+        </section>
+        
+        <section class="results-section" id="child-results">
+            <h2>Congratulations <span id="result-name"></span> on Completing the Adventure!</h2>
+            <p>You've done a fantastic job learning about digital habits!</p>
+            
+            <div class="creative-section">
+                <h3>Your Creative Mission</h3>
+                <p>Based on your answers, here are some fun activities just for you:</p>
+                
+                <div class="creative-activity animate-result delay-1">
+                    <i class="fas fa-palette"></i>
+                    <h4>Draw Your Digital Superhero</h4>
+                    <p>Create a superhero that represents healthy digital habits. What powers would they have?</p>
+                </div>
+                
+                <div class="creative-activity animate-result delay-2">
+                    <i class="fas fa-book-open"></i>
+                    <h4>Story Challenge</h4>
+                    <p>Write a short story about a character who discovers the perfect balance between screen time and other activities.</p>
+                </div>
+                
+                <div class="creative-activity animate-result delay-3">
+                    <i class="fas fa-seedling"></i>
+                    <h4>Nature Explorer</h4>
+                    <p>Spend 30 minutes outside and find three interesting things in nature to share with your family.</p>
+                </div>
+                
+                <div class="creative-activity animate-result delay-4">
+                    <i class="fas fa-gamepad"></i>
+                    <h4>Create Your Own Game</h4>
+                    <p>Design a board game about digital wellbeing. What are the rules? What happens when players make healthy choices?</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="primary-btn" onclick="showCertificate()"><i class="fas fa-certificate"></i> Get Your Certificate</button>
+            </div>
+        </section>
+        
+        <section class="results-section" id="parent-results">
+            <h2>Your Family's Digital Wellbeing Assessment Results</h2>
+            <p>Here's your comprehensive analysis and recommendations</p>
+            
+            <div class="dashboard">
+                <h3>Family Digital Habits Dashboard</h3>
+                <div class="dashboard-grid">
+                    <div class="dashboard-item">
+                        <canvas id="screenTimeChart" width="400" height="300"></canvas>
+                        <div class="percentage-label" id="screenTimePercentage">72%</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <canvas id="mentalHealthChart" width="400" height="300"></canvas>
+                        <div class="percentage-label" id="mentalHealthPercentage">65%</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <canvas id="habitsChart" width="400" height="300"></canvas>
+                        <div class="percentage-label" id="habitsPercentage">58%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mental-health-info">
+                <h3>Understanding Screen Time's Impact on Mental Health</h3>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-brain"></i> How Screen Time Affects Your Child's Mental Health</h4>
+                    <p>Excessive screen time can impact children's mental health in several ways:</p>
+                    <ul>
+                        <li><strong>Sleep disruption:</strong> Blue light from screens suppresses melatonin, affecting sleep quality and duration</li>
+                        <li><strong>Attention issues:</strong> Rapidly changing content can reduce attention spans for slower-paced activities</li>
+                        <li><strong>Social development:</strong> Reduced face-to-face interaction can impact social skill development</li>
+                        <li><strong>Mood regulation:</strong> Constant stimulation can make normal activities seem boring by comparison</li>
+                        <li><strong>Self-esteem:</strong> Social media exposure can create unrealistic comparisons and reduce self-worth</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-user"></i> How Screen Time Affects Your Mental Health</h4>
+                    <p>As parents, your screen habits also impact your wellbeing:</p>
+                    <ul>
+                        <li><strong>Work-life balance:</strong> Constant connectivity can blur boundaries between work and personal life</li>
+                        <li><strong>Parenting presence:</strong> Device use during family time reduces quality interactions with children</li>
+                        <li><strong>Stress and anxiety:</strong> Information overload and constant notifications increase stress levels</li>
+                        <li><strong>Modeling behavior:</strong> Children learn digital habits by observing their parents' screen use</li>
+                        <li><strong>Relationship quality:</strong> Excessive screen time can reduce meaningful connection with partners</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="creative-section">
+                <h3>Recommendations For Your Family</h3>
+                
+                <div class="creative-activity">
+                    <i class="fas fa-desktop"></i>
+                    <h4>Create Tech-Free Zones</h4>
+                    <p>Establish areas in your home where screens are not allowed, especially bedrooms and dining areas.</p>
+                </div>
+                
+                <div class="creative-activity">
+                    <i class="fas fa-clock"></i>
+                    <h4>Set Consistent Screen Time Limits</h4>
+                    <p>Create clear rules about when and how long screens can be used each day.</p>
+                </div>
+                
+                <div class="creative-activity">
+                    <i class="fas fa-book-reader"></i>
+                    <h4>Model Good Behavior</h4>
+                    <p>Be mindful of your own screen usage and demonstrate healthy digital habits for your children.</p>
+                </div>
+                
+                <div class="creative-activity">
+                    <i class="fas fa-seedling"></i>
+                    <h4>Encourage Educational Screen Time</h4>
+                    <p>Promote apps and content that foster creativity, learning, and positive development.</p>
+                </div>
+                
+                <div class="creative-activity">
+                    <i class="fas fa-bed"></i>
+                    <h4>Establish Screen-Free Bedtime Routines</h4>
+                    <p>Implement a digital curfew 1 hour before bedtime to improve sleep quality for the whole family.</p>
+                </div>
+                
+                <div class="creative-activity">
+                    <i class="fas fa-heart"></i>
+                    <h4>Prioritize Mental Health Check-ins</h4>
+                    <p>Regularly discuss feelings and emotions related to screen use with your children.</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="primary-btn" onclick="showParentCertificate()"><i class="fas fa-certificate"></i> Get Your Family Report</button>
+            </div>
+        </section>
+        
+        <div class="certificate" id="certificate">
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            
+            <div class="achievement-badge">
+                <i class="fas fa-award"></i>
+            </div>
+            
+            <h2>CERTIFICATE OF ACHIEVEMENT</h2>
+            <p>This certifies that</p>
+            <h3 id="certificate-name">Digital Explorer</h3>
+            <p>Age: <span id="certificate-age"></span></p>
+            <p>has successfully completed the Digital Wellbeing Adventure</p>
+            <p>and demonstrated understanding of healthy digital habits</p>
+            
+            <div class="stars" style="margin-top: 30px;">
+                <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+            </div>
+            
+            <p>Date: <span id="certificate-date"></span></p>
+            
+            <div style="margin-top: 40px;">
+                <button class="primary-btn" onclick="printCertificate()"><i class="fas fa-print"></i> Print Certificate</button>
+            </div>
+        </div>
+        
+        <div class="certificate" id="parent-certificate">
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            
+            <div class="achievement-badge">
+                <i class="fas fa-users"></i>
+            </div>
+            
+            <h2>FAMILY DIGITAL WELLBEING REPORT</h2>
+            <p>This report is prepared for</p>
+            <h3 id="parent-certificate-name">The Smith Family</h3>
+            <p>Child's Age: <span id="parent-certificate-age"></span></p>
+            <p>has completed a comprehensive assessment of digital habits</p>
+            <p>and received personalized recommendations for healthier screen time</p>
+            
+            <div class="stars" style="margin-top: 30px;">
+                <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+            </div>
+            
+            <p>Date: <span id="parent-certificate-date"></span></p>
+            
+            <div style="margin-top: 40px;">
+                <button class="primary-btn" onclick="printParentCertificate()"><i class="fas fa-print"></i> Print Report</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Digital Wellbeing & Productivity Assessment Tool © 2023 | For Moms & Kids</p>
+            <p>Powered by Advanced AI Models: GPT-4, BERT, RoBERTa, DistilBERT, T5, Random Forest, XGBoost, K-Means Clustering, Neural Networks, SVM</p>
+        </footer>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div class="chatbot-container">
+        <div class="chatbot-icon" id="chatbot-icon">
+            <i class="fas fa-comments"></i>
+        </div>
+        <iframe class="chatbot-iframe" id="chatbot-iframe" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        // Create bubbles for background
+        function createBubbles() {
+            const container = document.querySelector('.container');
+            const bubbleCount = 15;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                const size = Math.random() * 100 + 50;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${posX}%`;
+                bubble.style.top = `${posY}%`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                
+                document.body.appendChild(bubble);
+            }
+        }
+        
+        // User selection
+        document.getElementById('child-user').addEventListener('click', function() {
+            document.querySelector('.user-selection').style.display = 'none';
+            document.getElementById('child-info').style.display = 'block';
+        });
+        
+        document.getElementById('parent-user').addEventListener('click', function() {
+            document.querySelector('.user-selection').style.display = 'none';
+            document.getElementById('parent-info').style.display = 'block';
+        });
+        
+        // Age category selection
+        const ageOptions = document.querySelectorAll('.age-option');
+        let selectedAge = '';
+        
+        ageOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                ageOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAge = this.getAttribute('data-age');
+            });
+        });
+        
+        // Start child assessment
+        function startChildAssessment() {
+            const childName = document.getElementById('child-name').value;
+            if (!childName) {
+                alert("Please enter your name!");
+                return;
+            }
+            
+            if (!selectedAge) {
+                alert("Please select your age category!");
+                return;
+            }
+            
+            document.getElementById('child-info').style.display = 'none';
+            document.getElementById('child-assessment').style.display = 'block';
+            document.getElementById('child-name-display').textContent = childName;
+            document.getElementById('result-name').textContent = childName;
+            document.getElementById('certificate-name').textContent = childName;
+            document.getElementById('certificate-age').textContent = selectedAge;
+            
+            // Set appropriate games based on age
+            setupGamesForAge(selectedAge);
+        }
+        
+        // Start parent assessment
+        function startParentAssessment() {
+            const parentName = document.getElementById('parent-name').value;
+            const childName = document.getElementById('child-name-parent').value;
+            const childAge = document.getElementById('child-age-parent').value;
+            
+            if (!parentName || !childName || !childAge) {
+                alert("Please fill in all fields!");
+                return;
+            }
+            
+            document.getElementById('parent-info').style.display = 'none';
+            document.getElementById('parent-assessment').style.display = 'block';
+            document.getElementById('parent-certificate-name').textContent = parentName + " Family";
+            document.getElementById('parent-certificate-age').textContent = childAge;
+            
+            // Check for ADHD/dyslexia
+            const hasADHD = document.getElementById('adhd-checkbox').checked;
+            const hasDyslexia = document.getElementById('dyslexia-checkbox').checked;
+            
+            if (hasADHD || hasDyslexia) {
+                // Add special considerations to assessment
+                console.log("Applying special considerations for assessment");
+            }
+        }
+        
+        // Setup games based on age group
+        function setupGamesForAge(age) {
+            const gameContent = document.getElementById('game-content');
+            const gameContent2 = document.getElementById('game-content-2');
+            
+            if (age === '5-7') {
+                // Animal matching game for younger kids
+                gameContent.innerHTML = `
+                    <h3>Animal Matching Game</h3>
+                    <p>Find the matching pairs of animals!</p>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0;">
+                        <button class="game-btn" onclick="flipCard(this, '🐶')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐱')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐰')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐻')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐶')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐱')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐰')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '🐻')">?</button>
+                    </div>
+                    <p id="game-feedback"></p>
+                `;
+                
+                // Simple emoji game for younger kids
+                gameContent2.innerHTML = `
+                    <h3>Happy Face Finder</h3>
+                    <p>Click on the happy face when you see it!</p>
+                    <div id="emoji-game">
+                        <button class="game-btn" onclick="showNextEmoji()">Start Game</button>
+                    </div>
+                `;
+            } else if (age === '8-10') {
+                // Memory game for middle age group
+                gameContent.innerHTML = `
+                    <h3>Digital Habit Memory Game</h3>
+                    <p>Match the healthy digital habits with their benefits!</p>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0;">
+                        <button class="game-btn" onclick="flipCard(this, '⏰')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '💤')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '📵')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '👀')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '⏰')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '💤')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '📵')">?</button>
+                        <button class="game-btn" onclick="flipCard(this, '👀')">?</button>
+                    </div>
+                    <p id="game-feedback"></p>
+                `;
+                
+                // Puzzle game for middle age group
+                gameContent2.innerHTML = `
+                    <h3>Digital Wellness Puzzle</h3>
+                    <p>Put the steps in order for a healthy digital day!</p>
+                    <div style="border: 2px dashed #3498db; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <div class="game-btn" style="margin: 5px;" onclick="alert('Take breaks every hour!')">Take screen breaks</div>
+                        <div class="game-btn" style="margin: 5px;" onclick="alert('No screens before bed!')">No screens before bed</div>
+                        <div class="game-btn" style="margin: 5px;" onclick="alert('Balance is important!')">Balance activities</div>
+                    </div>
+                    <p>Click on each step to learn more!</p>
+                `;
+            } else {
+                // Critical thinking game for older kids
+                gameContent.innerHTML = `
+                    <h3>Digital Balance Challenge</h3>
+                    <p>Choose the best options for a balanced digital life!</p>
+                    <div style="text-align: left; margin: 20px 0;">
+                        <p>Scenario: You have 3 hours of free time. What would you do?</p>
+                        <div class="options">
+                            <div class="option" onclick="selectScenarioOption('A')">Spend all 3 hours playing video games</div>
+                            <div class="option" onclick="selectScenarioOption('B')">Spend 1 hour on screens, 2 hours on other activities</div>
+                            <div class="option" onclick="selectScenarioOption('C')">Spend 2 hours on screens, 1 hour on other activities</div>
+                            <div class="option" onclick="selectScenarioOption('D')">Avoid screens completely</div>
+                        </div>
+                        <p id="scenario-feedback" style="margin-top: 15px; font-weight: bold;"></p>
+                    </div>
+                `;
+                
+                // Reflection game for older kids
+                gameContent2.innerHTML = `
+                    <h3>Digital Habit Reflection</h3>
+                    <p>Think about your digital habits and set one goal for improvement!</p>
+                    <textarea id="reflection-text" placeholder="Write your goal here..." style="width: 100%; height: 100px; padding: 10px; margin: 15px 0; border-radius: 8px; border: 1px solid #3498db; background: rgba(20, 20, 30, 0.8); color: white;"></textarea>
+                    <button class="game-btn" onclick="submitReflection()">Submit Reflection</button>
+                `;
+            }
+        }
+        
+        // Child assessment logic
+        let currentChildQuestion = 1;
+        const totalChildQuestions = 10;
+        
+        function updateChildProgress() {
+            const progressPercent = (currentChildQuestion / totalChildQuestions) * 100;
+            document.getElementById('child-progress').style.width = progressPercent + '%';
+        }
+        
+        function nextChildQuestion() {
+            document.getElementById('child-q' + currentChildQuestion).style.display = 'none';
+            currentChildQuestion++;
+            
+            if (currentChildQuestion <= totalChildQuestions) {
+                document.getElementById('child-q' + currentChildQuestion).style.display = 'block';
+                document.querySelector('.prev-btn').style.display = 'inline-block';
+                
+                if (currentChildQuestion === totalChildQuestions) {
+                    document.getElementById('next-child-btn').textContent = 'Finish Adventure';
+                }
+            } else {
+                // Show creative results, not scores
+                document.getElementById('child-assessment').style.display = 'none';
+                document.getElementById('child-results').style.display = 'block';
+            }
+            
+            updateChildProgress();
+        }
+        
+        function prevChildQuestion() {
+            document.getElementById('child-q' + currentChildQuestion).style.display = 'none';
+            currentChildQuestion--;
+            
+            if (currentChildQuestion === 1) {
+                document.querySelector('.prev-btn').style.display = 'none';
+            }
+            
+            document.getElementById('child-q' + currentChildQuestion).style.display = 'block';
+            document.getElementById('next-child-btn').textContent = 'Next';
+            
+            updateChildProgress();
+        }
+        
+        // Parent assessment logic
+        let currentParentQuestion = 1;
+        const totalParentQuestions = 15;
+        
+        function updateParentProgress() {
+            const progressPercent = (currentParentQuestion / totalParentQuestions) * 100;
+            document.getElementById('parent-progress').style.width = progressPercent + '%';
+        }
+        
+        function nextParentQuestion() {
+            document.getElementById('parent-q' + currentParentQuestion).style.display = 'none';
+            currentParentQuestion++;
+            
+            if (currentParentQuestion <= totalParentQuestions) {
+                document.getElementById('parent-q' + currentParentQuestion).style.display = 'block';
+                document.querySelector('.prev-btn').style.display = 'inline-block';
+                
+                if (currentParentQuestion === totalParentQuestions) {
+                    document.getElementById('next-parent-btn').textContent = 'See Results';
+                }
+            } else {
+                // Show results
+                document.getElementById('parent-assessment').style.display = 'none';
+                document.getElementById('parent-results').style.display = 'block';
+                // Create the dashboard charts
+                setTimeout(createParentDashboard, 500);
+            }
+            
+            updateParentProgress();
+        }
+        
+        function prevParentQuestion() {
+            document.getElementById('parent-q' + currentParentQuestion).style.display = 'none';
+            currentParentQuestion--;
+            
+            if (currentParentQuestion === 1) {
+                document.querySelector('.prev-btn').style.display = 'none';
+            }
+            
+            document.getElementById('parent-q' + currentParentQuestion).style.display = 'block';
+            document.getElementById('next-parent-btn').textContent = 'Next';
+            
+            updateParentProgress();
+        }
+        
+        // Create dashboard charts for parent results
+        function createParentDashboard() {
+            // Screen Time Chart
+            const screenTimeCtx = document.getElementById('screenTimeChart').getContext('2d');
+            const screenTimeChart = new Chart(screenTimeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Screen Time', 'Remaining Time'],
+                    datasets: [{
+                        data: [72, 28],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.8)',
+                            'rgba(200, 200, 200, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(200, 200, 200, 0.5)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Daily Screen Time Ratio',
+                            color: '#fff'
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#fff'
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+            
+            // Mental Health Chart
+            const mentalHealthCtx = document.getElementById('mentalHealthChart').getContext('2d');
+            const mentalHealthChart = new Chart(mentalHealthCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Mental Health Impact', 'Remaining'],
+                    datasets: [{
+                        data: [65, 35],
+                        backgroundColor: [
+                            'rgba(46, 204, 113, 0.8)',
+                            'rgavam(200, 200, 200, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(200, 200, 200, 0.5)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Mental Health Impact Score',
+                            color: '#fff'
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#fff'
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+            
+            // Digital Habits Chart
+            const habitsCtx = document.getElementById('habitsChart').getContext('2d');
+            const habitsChart = new Chart(habitsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Healthy Habits', 'Needs Improvement'],
+                    datasets: [{
+                        data: [58, 42],
+                        backgroundColor: [
+                            'rgba(155, 89, 182, 0.8)',
+                            'rgava(200, 200, 200, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(200, 200, 200, 0.5)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Healthy Digital Habits Score',
+                            color: '#fff'
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#fff'
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+        
+        // Option selection
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from siblings
+                const siblings = this.parentElement.querySelectorAll('.option');
+                siblings.forEach(sib => sib.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+            });
+        });
+        
+        // Game functions
+        function showNextEmoji() {
+            const emojis = ['😊', '😢', '😠', '😴', '😎', '😍', '😋', '😳'];
+            const gameContainer = document.getElementById('emoji-game');
+            gameContainer.innerHTML = '';
+            
+            for (let i = 0; i < 12; i++) {
+                const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                const emojiBtn = document.createElement('button');
+                emojiBtn.className = 'game-btn';
+                emojiBtn.textContent = randomEmoji;
+                emojiBtn.onclick = function() {
+                    if (randomEmoji === '😊') {
+                        alert('Great job! You found the happy emoji!');
+                        gameContainer.innerHTML = '<p>Well done! You found the happy face! 😊</p>';
+                    } else {
+                        alert('Try again! Look for the happy face 😊');
+                        showNextEmoji();
+                    }
+                };
+                gameContainer.appendChild(emojiBtn);
+            }
+        }
+        
+        let firstCard = null;
+        
+        function flipCard(element, emoji) {
+            if (!firstCard) {
+                firstCard = { element, emoji };
+                element.textContent = emoji;
+                element.disabled = true;
+            } else {
+                const secondCard = { element, emoji };
+                element.textContent = emoji;
+                element.disabled = true;
+                
+                if (firstCard.emoji === secondCard.emoji) {
+                    // Match found
+                    document.getElementById('game-feedback').textContent = 'Good job! You found a match!';
+                    firstCard = null;
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        firstCard.element.textContent = '?';
+                        firstCard.element.disabled = false;
+                        secondCard.element.textContent = '?';
+                        secondCard.element.disabled = false;
+                        firstCard = null;
+                        document.getElementById('game-feedback').textContent = 'Try again!';
+                    }, 1000);
+                }
+            }
+        }
+        
+        function selectScenarioOption(option) {
+            const feedback = document.getElementById('scenario-feedback');
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            if (option === 'B') {
+                feedback.textContent = 'Great choice! Balancing screen time with other activities is healthy.';
+                feedback.style.color = '#2ecc71';
+            } else {
+                feedback.textContent = 'Think about how you can balance screen time with other activities.';
+                feedback.style.color = '#e74c3c';
+            }
+        }
+        
+        function submitReflection() {
+            const reflectionText = document.getElementById('reflection-text').value;
+            if (reflectionText.trim() !== '') {
+                alert('Thank you for sharing your reflection! Setting goals is a great step toward healthy digital habits.');
+                document.getElementById('game-content-2').innerHTML = '<p>Thank you for your reflection! 👍</p>';
+            } else {
+                alert('Please share your thoughts before submitting.');
+            }
+        }
+        
+        // Certificate functions
+        function showCertificate() {
+            document.getElementById('child-results').style.display = 'none';
+            document.getElementById('certificate').style.display = 'block';
+            
+            // Set current date on certificate
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+            document.getElementById('certificate-date').textContent = dateStr;
+        }
+        
+        function showParentCertificate() {
+            document.getElementById('parent-results').style.display = 'none';
+            document.getElementById('parent-certificate').style.display = 'block';
+            
+            // Set current date on certificate
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            });
+            document.getElementById('parent-certificate-date').textContent = dateStr;
+        }
+        
+        function printCertificate() {
+            const printContent = document.getElementById('certificate').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+        
+        function printParentCertificate() {
+            const printContent = document.getElementById('parent-certificate').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+        
+        // Chatbot functionality
+        document.getElementById('chatbot-icon').addEventListener('click', function() {
+            const iframe = document.getElementById('chatbot-iframe');
+            if (iframe.style.display === 'block') {
+                iframe.style.display = 'none';
+                iframe.src = 'about:blank';
+            } else {
+                iframe.style.display = 'block';
+                iframe.src = 'https://agent.jotform.com/0198f33c2dc77893984594509e315b107d75';
+            }
+        });
+        
+        // Close chatbot when clicking outside
+        document.addEventListener('click', function(event) {
+            const chatbotIcon = document.getElementById('chatbot-icon');
+            const chatbotIframe = document.getElementById('chatbot-iframe');
+            
+            if (!chatbotIcon.contains(event.target) && !chatbotIframe.contains(event.target)) {
+                if (chatbotIframe.style.display === 'block') {
+                    chatbotIframe.style.display = 'none';
+                    chatbotIframe.src = 'about:blank';
+                }
+            }
+        });
+
+        // Initialize the page
+        window.onload = function() {
+            createBubbles();
+        };
+    </script>
+</body>
+</html>
