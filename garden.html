@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Wellness Garden</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 600px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-area {
+            flex: 2;
+            min-width: 500px;
+            padding: 20px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #e9ecef;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #4e54c8;
+            color: white;
+        }
+        
+        .tab-content {
+            flex-grow: 1;
+            display: none;
+            overflow-y: auto;
+            max-height: 500px;
+            padding: 10px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .garden-container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .wordcloud-img {
+            width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .garden-title {
+            font-size: 1.5rem;
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        /* Weather Animation Styles */
+        .animation-container {
+            position: relative;
+            height: 300px;
+            margin: 15px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+        
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to bottom, #8BC34A, #4CAF50);
+            border-top-left-radius: 60% 30px;
+            border-top-right-radius: 60% 30px;
+            z-index: 5;
+        }
+        
+        .character {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .head {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to bottom, #FFE0B2, #FFCC80);
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            border: 3px solid #FFB74D;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+        
+        .face {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 30px;
+            transition: all 0.5s ease;
+        }
+        
+        .eye {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            background: #333;
+            border-radius: 50%;
+            top: 8px;
+            transition: all 0.5s ease;
+        }
+        
+        .eye.left { left: 9px; }
+        .eye.right { right: 9px; }
+        
+        .mouth {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 9px;
+            border-radius: 0 0 50% 50%;
+            background: #E53935;
+            transition: all 0.5s ease;
+        }
+        
+        .body {
+            width: 50px;
+            height: 75px;
+            background: #42A5F5;
+            border-radius: 14px 14px 0 0;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.8s ease;
+        }
+        
+        .sun {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            background: #FFEB3B;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #FF9800;
+            transition: all 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 10;
+        }
+        
+        .cloud {
+            position: absolute;
+            top: 50px;
+            left: 40px;
+            width: 90px;
+            height: 40px;
+            background: #FFF;
+            border-radius: 40px;
+            opacity: 0;
+            transition: all 1.5s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: #FFF;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cloud:before {
+            width: 45px;
+            height: 45px;
+            top: -20px;
+            left: 15px;
+        }
+        
+        .cloud:after {
+            width: 40px;
+            height: 40px;
+            top: -15px;
+            right: 15px;
+        }
+        
+        .rain-drop {
+            position: absolute;
+            width: 3px;
+            height: 14px;
+            background: #2196F3;
+            border-radius: 5px;
+            opacity: 0;
+            z-index: 15;
+        }
+        
+        .umbrella {
+            position: absolute;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #E91E63, #AD1457);
+            border-radius: 50% 50% 0 50%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(45deg);
+            opacity: 0;
+            transition: all 1s ease;
+            z-index: 25;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .umbrella:after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 30px;
+            background: #795548;
+            border-radius: 0 0 6px 6px;
+        }
+        
+        .umbrella-handle {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 45px;
+            background: #6D4C41;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .rainbow {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 140px;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            z-index: 10;
+        }
+        
+        .rainbow-color {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 12px solid transparent;
+        }
+        
+        .flowers {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            width: 100%;
+            height: 45px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 6;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .flower {
+            width: 30px;
+            height: 30px;
+            position: relative;
+        }
+        
+        .flower-center {
+            width: 15px;
+            height: 15px;
+            background: #FFEB3B;
+            border-radius: 50%;
+            position: absolute;
+            top: 7px;
+            left: 7px;
+            z-index: 2;
+        }
+        
+        .flower-petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #E91E63;
+            border-radius: 50% 50% 0 50%;
+            transform-origin: bottom right;
+        }
+        
+        .flower-stem {
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            background: #4CAF50;
+            bottom: -30px;
+            left: 13px;
+            z-index: 1;
+        }
+        
+        .butterfly {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            transition: all 2s ease;
+            z-index: 30;
+        }
+        
+        .weather-controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .weather-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .weather-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .weather-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .weather-btn.sunny { background: linear-gradient(135deg, #F1C40F, #F39C12); }
+        .weather-btn.cloudy { background: linear-gradient(135deg, #7F8C8D, #95A5A6); }
+        .weather-btn.rainy { background: linear-gradient(135deg, #3498DB, #2980B9); }
+        .weather-btn.umbrella { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+        .weather-btn.rainbow { background: linear-gradient(135deg, #9B59B6, #8E44AD); }
+        
+        .weather-message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #E3F2FD;
+            font-size: 0.9rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.08);
+            border: 2px dashed #64B5F6;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        /* Rest of the styles remain the same */
+        .assessment-container {
+            padding: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .question-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: #4e54c8;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            padding-left: 20px;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .option-btn {
+            padding: 10px 15px;
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option-btn:hover {
+            background: #dee2e6;
+        }
+        
+        .option-btn.selected {
+            background: #4e54c8;
+            color: white;
+            border-color: #4e54c8;
+        }
+        
+        .option-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+        
+        .message-system {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .message {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #4e54c8;
+        }
+        
+        .high-five {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .high-five-btn {
+            padding: 15px 30px;
+            background: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .high-five-btn:hover {
+            background: #ffca28;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .high-five-btn:active {
+            transform: scale(1) translateY(0);
+        }
+        
+        .submit-container {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .submit-btn {
+            padding: 15px 40px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .submit-btn:hover {
+            background: #43a047;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+        
+        .assessment-intro {
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #4e54c8;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .results-container {
+            padding: 20px;
+        }
+        
+        .overall-score {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4e54c8;
+            margin: 10px 0;
+        }
+        
+        .score-label {
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        .score-excellent {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .score-average {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .score-poor {
+            background: #f44336;
+            color: white;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .recommendations {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .recommendation-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2e7d32;
+        }
+        
+        .recommendation-list {
+            margin-left: 20px;
+        }
+        
+        .recommendation-list li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .visual-img {
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .results-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .results-images img {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .content-area {
+                min-width: 100%;
+            }
+            
+            .animation-container {
+                height: 250px;
+            }
+            
+            .weather-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .results-images {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Animation keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+        
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-80px) rotate(10deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(300px) rotate(20deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes butterflyFly {
+            0% {
+                transform: translate(-80px, -80px) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(300px, 150px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 30px #FF9800; }
+            50% { box-shadow: 0 0 45px #FF9800, 0 0 60px #FF9800; }
+        }
+        
+        .story-container {
+            margin-bottom: 30px;
+        }
+        
+        .story-text {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .choice-btn {
+            padding: 15px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 200px;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .choice-btn:hover {
+            background: #4e54c8;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+        }
+        
+        .story-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <h1>Digital Wellness Garden</h1>
+            <p class="subtitle">Cultivate healthy digital habits and mental wellbeing for your children</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="garden-container">
+                    <h2 class="garden-title">The Weather in Me</h2>
+                    <p>Explore emotions through weather patterns</p>
+                    
+                    <div class="animation-container">
+                        <div class="sun"></div>
+                        <div class="cloud"></div>
+                        <div class="umbrella"></div>
+                        <div class="umbrella-handle"></div>
+                        
+                        <div class="rainbow">
+                            <div class="rainbow-color" style="border-color: red; top: 0;"></div>
+                            <div class="rainbow-color" style="border-color: orange; top: 12px;"></div>
+                            <div class="rainbow-color" style="border-color: yellow; top: 24px;"></div>
+                            <div class="rainbow-color" style="border-color: green; top: 36px;"></div>
+                            <div class="rainbow-color" style="border-color: blue; top: 48px;"></div>
+                            <div class="rainbow-color" style="border-color: purple; top: 60px;"></div>
+                        </div>
+                        
+                        <div class="character">
+                            <div class="head">
+                                <div class="face">
+                                    <div class="eye left"></div>
+                                    <div class="eye right"></div>
+                                    <div class="mouth"></div>
+                                </div>
+                            </div>
+                            <div class="body"></div>
+                        </div>
+                        
+                        <div class="flowers">
+                            <div class="flower">
+                                <div class="flower-center"></div>
+                                <div class="flower-petal" style="transform: rotate(0deg);"></div>
+                                <div class="flower-petal" style="transform: rotate(45deg); background: #FF5722;"></div>
+                                <div class="flower-petal" style="transform: rotate(90deg); background: #9C27B0;"></div>
+                                <div class="flower-petal" style="transform: rotate(135deg); background: #3F51B5;"></div>
+                                <div class="flower-stem"></div>
+                            </div>
+                            <div class="flower">
+                                <div class="flower-center"></div>
+                                <div class="flower-petal" style="transform: rotate(0deg); background: #4CAF50;"></div>
+                                <div class="flower-petal" style="transform: rotate(60deg); background: #FF9800;"></div>
+                                <div class="flower-petal" style="transform: rotate(120deg); background: #E91E63;"></div>
+                                <div class="flower-stem"></div>
+                            </div>
+                            <div class="flower">
+                                <div class="flower-center"></div>
+                                <div class="flower-petal" style="transform: rotate(0deg); background: #9C27B0;"></div>
+                                <div class="flower-petal" style="transform: rotate(72deg); background: #2196F3;"></div>
+                                <div class="flower-petal" style="transform: rotate(144deg); background: #FFEB3B;"></div>
+                                <div class="flower-petal" style="transform: rotate(216deg); background: #4CAF50;"></div>
+                                <div class="flower-petal" style="transform: rotate(288deg); background: #FF5722;"></div>
+                                <div class="flower-stem"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="butterfly">
+                            <i class="fas fa-butterfly" style="font-size: 24px; color: #9C27B0;"></i>
+                        </div>
+                        
+                        <div class="ground"></div>
+                    </div>
+                    
+                    <div class="weather-message" id="weather-message">
+                        Press a button to explore emotional weather!
+                    </div>
+                    
+                    <div class="weather-controls">
+                        <button class="weather-btn sunny" onclick="changeWeather('sunny')">
+                            <i class="fas fa-sun"></i>
+                        </button>
+                        <button class="weather-btn cloudy" onclick="changeWeather('cloudy')">
+                            <i class="fas fa-cloud"></i>
+                        </button>
+                        <button class="weather-btn rainy" onclick="changeWeather('rainy')">
+                            <i class="fas fa-cloud-rain"></i>
+                        </button>
+                        <button class="weather-btn umbrella" onclick="changeWeather('umbrella')">
+                            <i class="fas fa-umbrella"></i>
+                        </button>
+                        <button class="weather-btn rainbow" onclick="changeWeather('rainbow')">
+                            <i class="fas fa-rainbow"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="garden-container">
+                    <h2 class="garden-title">Your Digital Wellness Word Cloud</h2>
+                    <p>Words that represent healthy digital habits</p>
+                    <img src="https://i.postimg.cc/cL1DchSL/wordcloud.png" alt="Digital Wellness Word Cloud" class="wordcloud-img">
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="story">Interactive Story</button>
+                    <button class="tab-btn" data-tab="assessment">Mental Health Assessment</button>
+                    <button class="tab-btn" data-tab="goals">Digital Goals</button>
+                    <button class="tab-btn" data-tab="results" id="results-tab-btn" style="display: none;">Results</button>
+                </div>
+                
+                <div class="tab-content active" id="story-tab">
+                    <div class="story-container">
+                        <div class="story-text" id="story-text">
+                            <p>Welcome to your digital wellness journey! It's a Saturday morning and your child just woke up. Their phone is buzzing with notifications. What should they do first?</p>
+                        </div>
+                        <div class="choices" id="story-choices">
+                            <button class="choice-btn" onclick="makeStoryChoice(1)">Check all notifications immediately</button>
+                            <button class="choice-btn" onclick="makeStoryChoice(2)">Take a deep breath and stretch before looking</button>
+                            <button class="choice-btn" onclick="makeStoryChoice(3)">Ignore phone and get breakfast first</button>
+                        </div>
+                    </div>
+                    
+                    <div class="assessment-container">
+                        <h3>Your Child's Digital Habits Summary</h3>
+                        <p>Based on previous choices, your child is building healthy digital habits! Keep it up!</p>
+                        
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                            <h4>Recent Achievements</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Limited social media use to 1 hour daily</li>
+                                <li>Took regular breaks from screen time</li>
+                                <li>Completed homework before recreational screen time</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="assessment-tab">
+                    <div class="assessment-intro">
+                        <h3>Child Mental Health Assessment</h3>
+                        <p>This assessment helps identify signs of dyslexia, ADHD, and digital addiction in your child. Answer based on your observations of your child's behavior.</p>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress" id="assessment-progress"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">1</div>
+                        <p class="question-text">How often does your child have difficulty focusing on tasks that require sustained attention?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">2</div>
+                        <p class="question-text">When reading, how often does your child lose their place or skip lines?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">3</div>
+                        <p class="question-text">How often does your child feel restless or fidgety when having to sit still for extended periods?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">4</div>
+                        <p class="question-text">How difficult is it for your child to put down digital devices even when they know they should?</p>
+                        <div class="options">
+                            <button class="option-btn">Not difficult</button>
+                            <button class="option-btn">Slightly difficult</button>
+                            <button class="option-btn">Moderately difficult</button>
+                            <button class="option-btn">Very difficult</button>
+                            <button class="option-btn">Extremely difficult</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">5</div>
+                        <p class="question-text">How often does your child struggle with spelling or recognizing words they should know?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">6</div>
+                        <p class="question-text">How often does your child act impulsively without thinking through the consequences?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">7</div>
+                        <p class="question-text">How often does your child have difficulty organizing tasks and activities?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">8</div>
+                        <p class="question-text">How often does your child avoid or dislike tasks that require sustained mental effort?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">9</div>
+                        <p class="question-text">How often is your child easily distracted by external stimuli?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">10</div>
+                        <p class="question-text">How often does your child forget daily activities or seem forgetful?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">11</div>
+                        <p class="question-text">How often does your child have trouble following through on instructions?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">12</div>
+                        <p class="question-text">How often does your child seem to not listen when spoken to directly?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">13</div>
+                        <p class="question-text">How often does your child make careless mistakes in schoolwork or other activities?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">14</div>
+                        <p class="question-text">How often does your child have difficulty waiting their turn?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-number">15</div>
+                        <p class="question-text">How often does your child interrupt or intrude on others' conversations or activities?</p>
+                        <div class="options">
+                            <button class="option-btn">Never</button>
+                            <button class="option-btn">Rarely</button>
+                            <button class="option-btn">Sometimes</button>
+                            <button class="option-btn">Often</button>
+                            <button class="option-btn">Very Often</button>
+                        </div>
+                    </div>
+                    
+                    <div class="submit-container">
+                        <button class="submit-btn" id="submit-assessment">Submit Assessment</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="results-tab">
+                    <div class="results-container">
+                        <div class="overall-score">
+                            <h2>Overall Assessment Score</h2>
+                            <div class="score-value">76%</div>
+                            <div class="score-label score-average">Average</div>
+                            <p style="margin-top: 15px;">Your child shows some areas of concern but overall is managing well. Focus on the recommendations below.</p>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Mental Health Assessment Results</div>
+                            <canvas id="results-chart" width="400" height="250"></canvas>
+                            <p>Based on your responses, these are the areas that need attention</p>
+                        </div>
+                        
+                        <div class="results-images">
+                            <img src="https://i.postimg.cc/WbLvnhSH/visual-selection-12.png" alt="Mental Health Visualization">
+                            <img src="https://i.postimg.cc/QMVws307/hr-sh-3.png" alt="Mental Health Support">
+                        </div>
+                        
+                        <div class="recommendations">
+                            <h3 class="recommendation-title">Personalized Recommendations</h3>
+                            <ul class="recommendation-list" id="personalized-recommendations">
+                                <li><strong>Structured Screen Time:</strong> Implement consistent daily limits on recreational screen use</li>
+                                <li><strong>Focus Exercises:</strong> Practice mindfulness and attention-building games for 10 minutes daily</li>
+                                <li><strong>Reading Support:</strong> Use dyslexia-friendly fonts and colored overlays for reading materials</li>
+                                <li><strong>Movement Breaks:</strong> Incorporate short physical breaks during homework sessions</li>
+                                <li><strong>Digital Curfew:</strong> Establish device-free time 1 hour before bedtime</li>
+                                <li><strong>Positive Reinforcement:</strong> Use the digital high-five system to acknowledge progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="goals-tab">
+                    <h2>Set Digital Goals With Your Child</h2>
+                    <p>Work with your child to set healthy digital habits and screen time goals.</p>
+                    
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h3>Weekly Screen Time Goals</h3>
+                        <div style="display: flex; align-items: center; margin-top: 15px;">
+                            <div style="flex: 1;">
+                                <p>Social Media: <strong>7 hours</strong></p>
+                                <div style="height: 10px; background: #e0e0e0; border-radius: 5px; margin-top: 5px;">
+                                    <div style="height: 100%; width: 60%; background: #4caf50; border-radius: 5px;"></div>
+                                </div>
+                            </div>
+                            <div style="flex: 1; margin-left: 20px;">
+                                <p>Gaming: <strong>5 hours</strong></p>
+                                <div style="height: 10px; background: #e0e0e0; border-radius: 5px; margin-top: 5px;">
+                                    <div style="height: 100%; width: 30%; background: #4caf50; border-radius: 5px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h3>Set New Goal</h3>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; margin-bottom: 15px;">
+                                <div style="flex: 1;">
+                                    <label for="goal-type">Goal Type:</label>
+                                    <select id="goal-type" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ced4da;">
+                                        <option>Screen Time Limit</option>
+                                        <option>No Phones at Meal Times</option>
+                                        <option>Digital Curfew</option>
+                                        <option>Device-Free Day</option>
+                                    </select>
+                                </div>
+                                <div style="flex: 1; margin-left: 15px;">
+                                    <label for="goal-time">Time Limit (hours):</label>
+                                    <input type="number" id="goal-time" value="2" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ced4da;">
+                                </div>
+                            </div>
+                            <button class="choice-btn">Save Goal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Digital Wellness Garden &copy; 2023 | Cultivate Healthy Digital Habits for Your Children</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Interactive story functionality
+        let storyState = 1;
+        
+        function makeStoryChoice(choice) {
+            const storyText = document.getElementById('story-text');
+            const storyChoices = document.getElementById('story-choices');
+            
+            if (storyState === 1) {
+                if (choice === 1) {
+                    storyText.innerHTML = '<p>Your child checks all notifications immediately. They get distracted by social media and spend 30 minutes scrolling before realizing they haven\'t started their day. What should they do next?</p>';
+                    storyChoices.innerHTML = `
+                        <button class="choice-btn" onclick="makeStoryChoice(1)">Continue scrolling for a bit longer</button>
+                        <button class="choice-btn" onclick="makeStoryChoice(2)">Put the phone down and start their morning routine</button>
+                        <button class="choice-btn" onclick="makeStoryChoice(3)">Set a timer for 5 more minutes of scrolling</button>
+                    `;
+                } else if (choice === 2) {
+                    storyText.innerHTML = '<p>Great choice! Your child takes a deep breath and stretches before looking at their phone. This mindful start helps them feel more centered. What should they do next?</p>';
+                    storyChoices.innerHTML = `
+                        <button class="choice-btn" onclick="makeStoryChoice(1)">Quickly check important notifications only</button>
+                        <button class="choice-btn" onclick="makeStoryChoice(2)">Put the phone away and get ready for the day first</button>
+                        <button class="choice-btn" onclick="makeStoryChoice(3)">Respond to a few messages then put it down</button>
+                    `;
+                } else {
+                    storyText.innerHTML = '<p>Your child ignores the phone and gets breakfast first. This helps them start their day with proper nutrition and without digital distractions. What should they do after breakfast?</p>';
+                    storyChoices.innerHTML = `
+                        <button class="choice-btn" onclick="makeStoryChoice(1)">Check phone notifications while eating</button>
+                        <button class="choice-btn" onclick="makeStoryChoice(2)">Finish breakfast completely before checking phone</button>
+                        <button class="choice-btn" onclick="makeStoryChoice(3)">Set specific time limits for phone use today</button>
+                    `;
+                }
+                storyState = 2;
+            } else if (storyState === 2) {
+                storyText.innerHTML = '<p>Great decision! Your child is learning to balance digital and real-world activities. In the afternoon, they have homework to do but feel tempted to play games. What should they do?</p>';
+                storyChoices.innerHTML = `
+                    <button class="choice-btn" onclick="makeStoryChoice(1)">Play games first, then do homework</button>
+                    <button class="choice-btn" onclick="makeStoryChoice(2)">Do homework first, then play games as a reward</button>
+                    <button class="choice-btn" onclick="makeStoryChoice(3)">Set a timer for 25 minutes of homework followed by 5 minutes of gaming</button>
+                `;
+                storyState = 3;
+            } else if (storyState === 3) {
+                storyText.innerHTML = '<p>Excellent choice! Your child is developing healthy digital habits. In the evening, they\'ve been on screens for a while and their eyes feel tired. What should they do?</p>';
+                storyChoices.innerHTML = `
+                    <button class="choice-btn" onclick="makeStoryChoice(1)">Take a break and do some eye exercises</button>
+                    <button class="choice-btn" onclick="makeStoryChoice(2)">Keep using screens but reduce brightness</button>
+                    <button class="choice-btn" onclick="makeStoryChoice(3)">Switch to a non-screen activity for the rest of the evening</button>
+                `;
+                storyState = 4;
+            } else {
+                storyText.innerHTML = '<p>Congratulations! Your child has completed a day of mindful digital habits. They\'ve learned to balance screen time with other activities, take breaks, and prioritize important tasks. These habits will help their digital wellness garden grow strong and healthy!</p>';
+                storyChoices.innerHTML = '';
+                
+                // Add a restart button
+                const restartBtn = document.createElement('button');
+                restartBtn.className = 'choice-btn';
+                restartBtn.textContent = 'Play Again';
+                restartBtn.onclick = function() {
+                    location.reload();
+                };
+                storyChoices.appendChild(restartBtn);
+            }
+        }
+        
+        // Assessment functionality
+        let answeredQuestions = 0;
+        const totalQuestions = document.querySelectorAll('.question').length;
+        const progressBar = document.getElementById('assessment-progress');
+        
+        // Update progress bar
+        function updateProgress() {
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // Option selection
+        document.querySelectorAll('.option-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove selected class from all buttons in this question
+                const question = button.closest('.question');
+                question.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked button
+                button.classList.add('selected');
+                
+                // Check if this question was previously unanswered
+                if (!button.closest('.question').classList.contains('answered')) {
+                    answeredQuestions++;
+                    button.closest('.question').classList.add('answered');
+                    updateProgress();
+                }
+            });
+        });
+        
+        // Submit assessment
+        document.getElementById('submit-assessment').addEventListener('click', () => {
+            if (answeredQuestions === totalQuestions) {
+                // Show results tab
+                document.getElementById('results-tab-btn').style.display = 'flex';
+                document.getElementById('results-tab-btn').click();
+                
+                // Create chart and personalized recommendations
+                createChart();
+                generatePersonalizedRecommendations();
+            } else {
+                alert(`Please answer all questions before submitting. You have ${totalQuestions - answeredQuestions} remaining.`);
+            }
+        });
+        
+        // Create result chart
+        function createChart() {
+            const ctx = document.getElementById('results-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Attention', 'Focus', 'Digital Habits', 'Reading', 'Impulse Control', 'Organization'],
+                    datasets: [{
+                        label: 'Assessment Score',
+                        data: [65, 72, 58, 62, 68, 60],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Generate personalized recommendations based on answers
+        function generatePersonalizedRecommendations() {
+            const recommendationsList = document.getElementById('personalized-recommendations');
+            recommendationsList.innerHTML = '';
+            
+            // These would be based on actual user responses in a real application
+            const recommendations = [
+                "<strong>Structured Screen Time:</strong> Implement consistent daily limits on recreational screen use",
+                "<strong>Focus Exercises:</strong> Practice mindfulness and attention-building games for 10 minutes daily",
+                "<strong>Reading Support:</strong> Use dyslexia-friendly fonts and colored overlays for reading materials",
+                "<strong>Movement Breaks:</strong> Incorporate short physical breaks during homework sessions",
+                "<strong>Digital Curfew:</strong> Establish device-free time 1 hour before bedtime",
+                "<strong>Positive Reinforcement:</strong> Use the digital high-five system to acknowledge progress",
+                "<strong>Organizational Tools:</strong> Introduce planners and checklists to help with task management",
+                "<strong>Professional Evaluation:</strong> Consider a formal assessment for ADHD and dyslexia"
+            ];
+            
+            // Add recommendations to the list
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.innerHTML = rec;
+                recommendationsList.appendChild(li);
+            });
+        }
+        
+        // Weather Animation Functionality
+        const sun = document.querySelector('.sun');
+        const cloud = document.querySelector('.cloud');
+        const umbrella = document.querySelector('.umbrella');
+        const umbrellaHandle = document.querySelector('.umbrella-handle');
+        const rainbow = document.querySelector('.rainbow');
+        const weatherMessage = document.getElementById('weather-message');
+        const mouth = document.querySelector('.mouth');
+        const body = document.querySelector('.body');
+        const eyes = document.querySelectorAll('.eye');
+        const head = document.querySelector('.head');
+        const flowers = document.querySelector('.flowers');
+        const butterfly = document.querySelector('.butterfly');
+        const animationContainer = document.querySelector('.animation-container');
+        
+        // Create rain drops
+        for (let i = 0; i < 20; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.style.left = `${Math.random() * 100}%`;
+            drop.style.animationDelay = `${Math.random() * 2}s`;
+            document.querySelector('.animation-container').appendChild(drop);
+        }
+        
+        const rainDrops = document.querySelectorAll('.rain-drop');
+        
+        // Create sun rays
+        for (let i = 0; i < 12; i++) {
+            const ray = document.createElement('div');
+            ray.className = 'sun-ray';
+            ray.style.width = '20px';
+            ray.style.height = '6px';
+            ray.style.left = '35px';
+            ray.style.top = '35px';
+            ray.style.transform = `rotate(${i * 30}deg) translateX(45px)`;
+            sun.appendChild(ray);
+        }
+        
+        // Change weather function
+        function changeWeather(type) {
+            // Reset all states first
+            sun.style.opacity = '0';
+            sun.style.animation = 'none';
+            cloud.style.opacity = '0';
+            umbrella.style.opacity = '0';
+            umbrellaHandle.style.opacity = '0';
+            rainbow.style.opacity = '0';
+            flowers.style.opacity = '0';
+            butterfly.style.animation = 'none';
+            butterfly.style.opacity = '0';
+            
+            rainDrops.forEach(drop => {
+                drop.style.opacity = '0';
+                drop.style.animation = 'none';
+            });
+            
+            // Reset character to neutral
+            mouth.style.height = '9px';
+            mouth.style.borderRadius = '0 0 50% 50%';
+            mouth.style.backgroundColor = '#E53935';
+            body.style.backgroundColor = '#42A5F5';
+            body.style.transform = 'scale(1)';
+            head.style.transform = 'scale(1)';
+            eyes.forEach(eye => {
+                eye.style.height = '9px';
+                eye.style.borderRadius = '50%';
+            });
+            animationContainer.style.background = 'linear-gradient(to bottom, #87CEEB, #E0F7FA)';
+            
+            // Apply selected weather state
+            switch(type) {
+                case 'sunny':
+                    sun.style.opacity = '1';
+                    sun.style.animation = 'glow 3s infinite ease-in-out, pulse 4s infinite ease-in-out';
+                    weatherMessage.innerHTML = "<i class='fas fa-sun'></i> <strong>Sunny days are happy days!</strong> Everything feels bright and cheerful.";
+                    mouth.style.height = '14px';
+                    body.style.backgroundColor = '#4CAF50';
+                    body.style.animation = 'float 4s infinite ease-in-out';
+                    eyes.forEach(eye => {
+                        eye.style.height = '3px';
+                        eye.style.borderRadius = '50% 50% 0 0';
+                    });
+                    flowers.style.opacity = '1';
+                    butterfly.style.opacity = '1';
+                    butterfly.style.animation = 'butterflyFly 10s infinite ease-in-out';
+                    break;
+                    
+                case 'cloudy':
+                    cloud.style.opacity = '1';
+                    weatherMessage.innerHTML = "<i class='fas fa-cloud'></i> <strong>Sometimes clouds appear, and we feel a little sad.</strong> That's okay. These feelings are normal.";
+                    mouth.style.height = '5px';
+                    mouth.style.borderRadius = '50% 50% 0 0';
+                    body.style.backgroundColor = '#9E9E9E';
+                    body.style.transform = 'scale(0.95)';
+                    head.style.transform = 'scale(0.98)';
+                    animationContainer.style.background = 'linear-gradient(to bottom, #B0BEC5, #CFD8DC)';
+                    break;
+                    
+                case 'rainy':
+                    cloud.style.opacity = '1';
+                    cloud.style.transform = 'translateX(-10px)';
+                    weatherMessage.innerHTML = "<i class='fas fa-cloud-rain'></i> <strong>Sometimes it rains, and we feel upset.</strong> Our feelings pour down like raindrops.";
+                    rainDrops.forEach(drop => {
+                        drop.style.opacity = '1';
+                        drop.style.animation = `rainFall ${Math.random() * 1 + 1}s linear infinite`;
+                    });
+                    mouth.style.height = '5px';
+                    mouth.style.borderRadius = '50% 50% 0 0';
+                    body.style.backgroundColor = '#5C6BC0';
+                    body.style.transform = 'scale(0.9)';
+                    head.style.transform = 'scale(0.95)';
+                    animationContainer.style.background = 'linear-gradient(to bottom, #78909C, #B0BEC5)';
+                    break;
+                    
+                case 'umbrella':
+                    cloud.style.opacity = '1';
+                    umbrella.style.opacity = '1';
+                    umbrellaHandle.style.opacity = '1';
+                    weatherMessage.innerHTML = "<i class='fas fa-umbrella'></i> <strong>When it rains, we can use our umbrella!</strong> Coping strategies help us manage big feelings.";
+                    rainDrops.forEach(drop => {
+                        drop.style.opacity = '1';
+                        drop.style.animation = `rainFall ${Math.random() * 1 + 1}s linear infinite`;
+                    });
+                    mouth.style.height = '9px';
+                    body.style.backgroundColor = '#FF9800';
+                    body.style.animation = 'pulse 2s infinite ease-in-out';
+                    eyes.forEach(eye => {
+                        eye.style.height = '6px';
+                        eye.style.borderRadius = '50%';
+                    });
+                    animationContainer.style.background = 'linear-gradient(to bottom, #78909C, #B0BEC5)';
+                    break;
+                    
+                case 'rainbow':
+                    sun.style.opacity = '1';
+                    sun.style.animation = 'glow 3s infinite ease-in-out';
+                    cloud.style.opacity = '0.7';
+                    rainbow.style.opacity = '1';
+                    weatherMessage.innerHTML = "<i class='fas fa-rainbow'></i> <strong>After the storm comes a rainbow!</strong> Our feelings change and grow, and that's beautiful.";
+                    mouth.style.height = '14px';
+                    body.style.backgroundColor = '#E91E63';
+                    body.style.animation = 'float 4s infinite ease-in-out';
+                    eyes.forEach(eye => {
+                        eye.style.height = '3px';
+                        eye.style.borderRadius = '50% 50% 0 0';
+                    });
+                    flowers.style.opacity = '1';
+                    animationContainer.style.background = 'linear-gradient(to bottom, #87CEEB, #E0F7FA)';
+                    break;
+            }
+        }
+        
+        // Initialize with sunny weather
+        setTimeout(() => changeWeather('sunny'), 1000);
+        
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            .sun-ray {
+                animation: pulse 3s infinite ease-in-out;
+                animation-delay: calc(var(--i) * 0.2s);
+            }
+            
+            .flower {
+                animation: float 6s infinite ease-in-out;
+                animation-delay: calc(var(--i) * 0.5s);
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Set animation delays for flowers
+        document.querySelectorAll('.flower').forEach((flower, i) => {
+            flower.style.setProperty('--i', i);
+        });
+    </script>
+</body>
+</html>
