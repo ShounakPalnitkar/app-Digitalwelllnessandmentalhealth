@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Exercises for Mental Health</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .poster {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: #2ecc71;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .exercise-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #3498db;
+        }
+        
+        .exercise-card h3 {
+            color: #3498db;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .exercise-card h3 i {
+            margin-right: 10px;
+        }
+        
+        .benefits-list {
+            list-style-type: none;
+            margin: 15px 0;
+        }
+        
+        .benefits-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .benefits-list li i {
+            color: #2ecc71;
+            position: absolute;
+            left: 0;
+            top: 4px;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .instructions h4 {
+            color: #3498db;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .instructions h4 i {
+            margin-right: 8px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .stat-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .time-recommendation {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .time-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .time-box h4 {
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="header">
+            <h1>Move Together, Thrive Together</h1>
+            <p>Family Exercises for Mental Health & Well-being</p>
+        </div>
+        
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-hiking"></i> Outdoor Activities</h2>
+                    
+                    <div class="exercise-card">
+                        <h3><i class="fas fa-walking"></i> Nature Walking</h3>
+                        <p>A simple walk in nature can reduce stress and improve mood for the whole family.</p>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check-circle"></i> Reduces anxiety and depression</li>
+                            <li><i class="fas fa-check-circle"></i> Improves focus and attention</li>
+                            <li><i class="fas fa-check-circle"></i> Increases vitamin D exposure</li>
+                        </ul>
+                        <div class="instructions">
+                            <h4><i class="fas fa-clipboard-list"></i> How to do it:</h4>
+                            <p>Find a local park or trail. Leave devices behind and focus on observing nature together. Play "I Spy" or identify plants and birds.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h3><i class="fas fa-bicycle"></i> Family Bike Rides</h3>
+                        <p>Cycling is excellent for cardiovascular health and family bonding.</p>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check-circle"></i> Boosts mood through aerobic exercise</li>
+                            <li><i class="fas fa-check-circle"></i> Builds leg strength and coordination</li>
+                            <li><i class="fas fa-check-circle"></i> Encourages exploration and adventure</li>
+                        </ul>
+                        <div class="instructions">
+                            <h4><i class="fas fa-clipboard-list"></i> How to do it:</h4>
+                            <p>Choose safe bike paths. Start with short distances and gradually increase. Make stops at interesting points along the way.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-home"></i> Indoor Exercises</h2>
+                    
+                    <div class="exercise-card">
+                        <h3><i class="fas fa-yin-yang"></i> Family Yoga</h3>
+                        <p>Yoga combines physical postures, breathing exercises, and meditation.</p>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check-circle"></i> Teaches mindfulness and relaxation</li>
+                            <li><i class="fas fa-check-circle"></i> Impro flexibility and balance</li>
+                            <li><i class="fas fa-check-circle"></i> Reduces stress and improves sleep</li>
+                        </ul>
+                        <div class="instructions">
+                            <h4><i class="fas fa-clipboard-list"></i> How to do it:</h4>
+                            <p>Use YouTube videos for guided family yoga. Focus on fun animal poses for kids. Practice deep breathing together.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h3><i class="fas fa-music"></i> Dance Parties</h3>
+                        <p>Dancing is a fun way to get hearts pumping and release endorphins.</p>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check-circle"></i> Boosts mood instantly</li>
+                            <li><i class="fas fa-check-circle"></i> Improves coordination and rhythm</li>
+                            <li><i class="fas fa-check-circle"></i> Encourages self-expression</li>
+                        </ul>
+                        <div class="instructions">
+                            <h4><i class="fas fa-clipboard-list"></i> How to do it:</h4>
+                            <p>Create a playlist of everyone's favorite songs. Take turns choosing songs. Use disco lights or costumes to make it more fun!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="time-recommendation">
+                <div class="time-box">
+                    <h4>Children</h4>
+                    <p><strong>60 mins</strong> daily</p>
+                    <p>Moderate to vigorous activity</p>
+                </div>
+                <div class="time-box">
+                    <h4>Parents</h4>
+                    <p><strong>30 mins</strong> daily</p>
+                    <p>Moderate activity</p>
+                </div>
+            </div>
+            
+            <div class="stat-box">
+                <h3>Just 20 minutes of exercise can improve mood for up to 12 hours!</h3>
+                <p>Regular physical activity is as effective as medication for mild to moderate depression and anxiety.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Make movement a family priority for better mental health | 🌱 Designed for growing minds and nurturing parents</p>
+            <p>© 2023 Family Wellness Initiative</p>
+        </div>
+    </div>
+</body>
+</html>
